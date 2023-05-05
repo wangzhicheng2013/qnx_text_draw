@@ -84,6 +84,12 @@ private:
         if (error) {
             return error;
         }
+        set_display_zorder(999);
+        error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_ZORDER, &display_zorder_);
+        if (error) {
+            SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_ZORDER failed, error:%s", strerror(errno));
+            return error;
+        }
         static const int alpha = 255;
         error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_GLOBAL_ALPHA, &alpha);
         if (error) {

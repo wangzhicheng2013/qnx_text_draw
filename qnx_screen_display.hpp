@@ -28,11 +28,6 @@ protected:
             SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_USAGE failed, error:%s", strerror(errno));
             return error;
         }
-        error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_ZORDER, &display_zorder_);
-        if (error) {
-            SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_ZORDER failed, error:%s", strerror(errno));
-            return error;
-        }
         // create screen window buffers
         error = screen_create_window_buffers(win_, 1);
         if (error) {
