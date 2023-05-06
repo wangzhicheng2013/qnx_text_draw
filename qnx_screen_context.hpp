@@ -6,7 +6,8 @@
 #include <assert.h>
 #include <screen/screen.h>
 #include "qnx_slog2.hpp"
-#include "global_error_code.hpp"
+#include "global_data_define.hpp"
+#include "image_tools.hpp"
 struct qnx_screen_context {
     screen_context_t screen_ctx = nullptr;
     screen_display_t *screen_disps = nullptr;

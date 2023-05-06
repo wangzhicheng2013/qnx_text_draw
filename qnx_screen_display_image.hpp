@@ -5,8 +5,6 @@ private:
     int image_format_ = SCREEN_FORMAT_UYVY;
     int image_size_ = 0;
     int image_scale_[2] = { 0 };
-    int display_size_[2] = { 0 };
-    int display_pos_[2] = { 0 };
 public:
     static qnx_screen_display_image& get_instance() {
         static qnx_screen_display_image instance;
@@ -30,39 +28,12 @@ public:
             return IMAGE_FORMAT_INVALID;
         }
         SLOG_I("set image scale: %dx%d, image size:%d", image_scale_[0], image_scale_[1], image_size_);
-        int error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_BUFFER_SIZE, image_scale_);
-        if (error) {
-            SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_BUFFER_SIZE failed, error:%s", strerror(errno));
-            return error;
-        }
-        return 0;
-    }
-    int set_display_position(int x, int y) {
-        display_pos_[0] = x;
-        display_pos_[1] = y;
-        SLOG_I("set display position: %dx%d", display_pos_[0], display_pos_[1]);
-        int error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_POSITION, display_pos_);
-        if (error) {
-            SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_POSITION failed, error:%s", strerror(errno));
-            return error;
-        }
-        return 0;
-    }
-    int set_display_size(int width, int height) {
-        display_size_[0] = width;
-        display_size_[1] = height;
-        SLOG_I("display size: %dx%d", display_size_[0], display_size_[1]);
-        int error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_SIZE, display_size_);
-        if (error) {
-            SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_SIZE failed, error:%s", strerror(errno));
-            return error;
-        }
-        return 0;
+        return set_screen_buffer_size(image_scale_);
     }
     int display_image(const char *image_ptr) {
         if (nullptr == image_ptr) {
             SLOG_E("display null image!");
-            return IMAGE_PTR_IS_NULL;
+            return DATA_PTR_IS_NULL;
         }
         screen_buffer_t render_buf[2] = { 0 };
         int error = screen_get_window_property_pv(win_, SCREEN_PROPERTY_RENDER_BUFFERS, (void **)render_buf);

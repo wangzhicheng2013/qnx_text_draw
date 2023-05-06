@@ -3,14 +3,14 @@
 class qnx_screen_display_zone : public qnx_screen_display {
 private:
     // full screen display by default
-    int margin_left_ = 0;
-    int margin_top_ = 0;
-    int margin_right_ = 0;
-    int margin_bottom_ = 0;
+    int margin_left_ = -1;
+    int margin_top_ = -1;
+    int margin_right_ = -1;
+    int margin_bottom_ = -1;
     int display_rect_[4] = { 0 };
     // display camera frame
-    int min_display_width_ = 500;
-    int min_display_height_ = 500;
+    int min_display_width_ = MIN_DISPLAY_WIDTH;
+    int min_display_height_ = MIN_DISPLAY_HEIGHT;
 public:
     static qnx_screen_display_zone& get_instance() {
         static qnx_screen_display_zone instance;
@@ -84,7 +84,7 @@ private:
         if (error) {
             return error;
         }
-        set_display_zorder(999);
+        set_display_zorder(QNX_SCREEN_DEFAULT_ZORDER_OF_ZONE);
         error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_ZORDER, &display_zorder_);
         if (error) {
             SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_ZORDER failed, error:%s", strerror(errno));

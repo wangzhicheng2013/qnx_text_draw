@@ -15,18 +15,13 @@ private:
     const char *font_path_ = "./FZLTH.ttf";
     unsigned char* mask_ = nullptr;
     const wchar_t* text_ = nullptr;
-    int width_ = 1920;
-    int height_ = 1080;
-    int font_size_ = 36;
+    int width_ = 0;
+    int height_ = 0;
+    int font_size_ = 0;
 public:
-    qnx_text_draw(int width = 1920, int height = 1080, int font_size = 36) : width_(width),
-                                                          height_(height),
-                                                          font_size_(font_size) {
-        mask_ = (unsigned char *)malloc(width_ * height_);
-        assert(mask_ != nullptr);
-    }
-    virtual ~qnx_text_draw() {
-        uninit();
+    static qnx_text_draw& get_instance() {
+        static qnx_text_draw instance;
+        return instance;
     }
     inline void set_font_path(const char *path) {
         font_path_ = path;
@@ -42,16 +37,24 @@ public:
         }
         return 0;
     }
-    int draw(const wchar_t * str) {
+    int draw(unsigned char* font_mask, 
+             const wchar_t* str, 
+             int width, 
+             int height, 
+             int font_size) {
+        mask_ = font_mask;
         text_ = str;
+        width_ = width;
+        height_ = height;
+        font_size_ = font_size;
         return draw_string_mask();
     }
 private:
+    qnx_text_draw() = default;
+    virtual ~qnx_text_draw() {
+        uninit();
+    }
     void uninit() {
-        if (mask_ != nullptr) {
-            free(mask_);
-            mask_ = nullptr;
-        }
         FT_Done_Face(face_);
         FT_Done_FreeType(library_);
     }
@@ -108,3 +111,4 @@ private:
         return error;
     }
 };
+#define QNX_TEXT_DRAW qnx_text_draw::get_instance()
