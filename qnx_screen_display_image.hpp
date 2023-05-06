@@ -68,7 +68,7 @@ private:
         if (error) {
             return error;
         }
-        set_display_zorder(1000);
+        set_display_zorder(QNX_SCREEN_DEFAULT_ZORDER_OF_IMAGE);
         error = screen_set_window_property_iv(win_, SCREEN_PROPERTY_ZORDER, &display_zorder_);
         if (error) {
             SLOG_E("screen_set_window_property_iv for SCREEN_PROPERTY_ZORDER failed, error:%s", strerror(errno));
